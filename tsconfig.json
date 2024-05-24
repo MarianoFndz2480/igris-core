@@ -14,7 +14,7 @@
         "noUnusedParameters": true,
         "moduleResolution": "node",
         "baseUrl": "./",
-        "types": ["node", "jest"],
+        "types": ["node"],
         "paths": {
             "*": ["node_modules/*"]
         }
