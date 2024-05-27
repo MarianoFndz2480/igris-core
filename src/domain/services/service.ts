@@ -1,9 +1,9 @@
-import { faker } from '@faker-js/faker'
 import { Repository } from '../repo'
 import { Model, MutableModel } from '../model'
 import { CommonID } from '../../types'
 import { Session } from '../session'
 import { NotFoundError } from '../../application'
+import { randomUUID } from 'crypto'
 
 export abstract class Service<M extends Model<{}>> {
     protected declare readonly repository: Repository<M['data'], M>
@@ -21,7 +21,7 @@ export abstract class Service<M extends Model<{}>> {
     }
 
     generateId() {
-        return faker.string.uuid()
+        return randomUUID()
     }
 
     get createCommonProps() {

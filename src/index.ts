@@ -1,5 +1,4 @@
 export * from './application'
-export * from './database'
 export * from './domain'
 export * from './errors'
 export * from './infrastructure'

@@ -1,4 +1,4 @@
-import { ValidatorError } from '../errors/common.errors'
+import { ValidatorError } from '../errors'
 import { ResponseError } from './responses.usecase'
 import { SchemaValidator } from './schema-validator'
 

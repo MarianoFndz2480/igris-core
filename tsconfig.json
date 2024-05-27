@@ -13,11 +13,13 @@
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "moduleResolution": "node",
-        "baseUrl": "./src/index.ts",
+        "baseUrl": ".",
         "types": ["node"],
         "paths": {
             "*": ["node_modules/*"]
-        }
+        },
+        "declaration": true,
+        "emitDeclarationOnly": true
     },
     "include": ["src/**/*.ts"],
     "exclude": ["node_modules", "dist"]

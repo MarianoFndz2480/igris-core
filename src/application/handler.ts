@@ -1,5 +1,5 @@
 import { Session } from '../domain'
-import { ValidatorError } from '../errors/common.errors'
+import { ValidatorError } from '../errors'
 import { GenericUseCaseInput, HandlerInput } from '../types'
 import { AccessManager } from './access-manager'
 import { Authenticator } from './authenticators/authenticator'
