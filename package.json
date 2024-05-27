@@ -38,8 +38,6 @@
         "jsonwebtoken": "^9.0.2",
         "knex": "^2.5.1",
         "reflect-metadata": "^0.1.14",
-        "sequelize": "^6.37.2",
-        "sequelize-typescript": "^2.1.5",
         "yup": "^1.4.0"
     }
 }
