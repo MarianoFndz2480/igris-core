@@ -1,6 +1,6 @@
 import { ObjectSchema, ValidationError } from 'yup'
 import { SchemaValidator } from './schema-validator'
-import { ValidatorError } from '../../errors/common.errors'
+import { ValidatorError } from '../../errors'
 
 export class YupValidator extends SchemaValidator {
     validate(value: any) {
