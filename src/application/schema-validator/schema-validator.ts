@@ -1,5 +1,9 @@
-export abstract class SchemaValidator {
+export abstract class SchemaValidator<T> {
     declare schema: any
+
     abstract validate(value: any): Promise<any>
-    abstract setSchema(schema: any): any
+
+    setSchema<K extends T>(schema: K) {
+        this.schema = schema
+    }
 }

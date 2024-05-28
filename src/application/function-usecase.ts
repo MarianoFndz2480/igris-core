@@ -2,7 +2,6 @@ import { ValidatorError } from '../errors'
 import { ResponseError } from './responses.usecase'
 import { SchemaValidator } from './schema-validator'
 
-//Cambiar nombre
 export class FunctionUseCase<Payload = object> {
     declare payload: Payload
 
@@ -23,7 +22,7 @@ export class FunctionUseCase<Payload = object> {
         }
     }
 
-    payloadValidator(): SchemaValidator | null {
+    payloadValidator(): SchemaValidator<any> | null {
         return null
     }
 

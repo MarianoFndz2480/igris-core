@@ -1,6 +1,6 @@
 {
     "name": "igris-core",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "The core of the Igris framework",
     "scripts": {
         "lint": "eslint --fix",
@@ -34,14 +34,12 @@
         "husky": "^8.0.3",
         "prettier": "^2.8.8",
         "ts-node": "^10.9.2",
-        "typescript": "^5.4.3"
+        "typescript": "^5.4.3",
+        "esbuild-plugin-copy": "^2.1.1"
     },
     "dependencies": {
         "aws-lambda": "^1.0.7",
         "aws-sdk": "^2.1590.0",
-        "esbuild-plugin-copy": "^2.1.1",
-        "jsonwebtoken": "^9.0.2",
-        "knex": "^2.5.1",
-        "yup": "^1.4.0"
+        "jsonwebtoken": "^9.0.2"
     }
 }

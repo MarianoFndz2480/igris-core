@@ -29,11 +29,11 @@ export class UseCase<
         this.session = session
     }
 
-    public getQueryParamsValidator(): SchemaValidator | null {
+    public getQueryParamsValidator(): SchemaValidator<any> | null {
         return null
     }
 
-    public getPayloadValidator(): SchemaValidator | null {
+    public getPayloadValidator(): SchemaValidator<any> | null {
         return null
     }
 
