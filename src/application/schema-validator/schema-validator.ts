@@ -1,9 +1,11 @@
-export abstract class SchemaValidator<T> {
-    declare schema: any
+export class SchemaValidator<T> {
+    declare schema: T
 
-    abstract validate(value: any): Promise<any>
-
-    setSchema<K extends T>(schema: K) {
+    constructor(schema: T) {
         this.schema = schema
+    }
+
+    validate(_: any): Promise<any> {
+        throw new Error('Validate method must be override')
     }
 }

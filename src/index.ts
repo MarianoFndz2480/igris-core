@@ -1,6 +1,5 @@
 export * from './application'
 export * from './domain'
 export * from './errors'
-export * from './infrastructure'
 export * from './types'
 export * from './utils'
