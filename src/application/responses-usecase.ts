@@ -52,14 +52,6 @@ export class InvalidQueryParamsError extends ResponseError {
     }
 }
 
-export class InvalidTokenFormatError extends ResponseError {
-    constructor() {
-        super()
-        this.message = 'Invalid token format. Try again'
-        this.code = 400
-    }
-}
-
 export class UnauthorizedError extends ResponseError {
     constructor() {
         super()
@@ -73,13 +65,5 @@ export class ForbiddenError extends ResponseError {
         super()
         this.message = 'ForbiddenError'
         this.code = 403
-    }
-}
-
-export class TokenMustBeProvidedError extends ResponseError {
-    constructor() {
-        super()
-        this.message = 'Token must be provided'
-        this.code = 400
     }
 }
