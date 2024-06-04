@@ -1,3 +1,1 @@
-export class Session {
-    setData(_: any) {}
-}
+export class Session {}
