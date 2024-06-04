@@ -1,5 +1,4 @@
 const { build, analyzeMetafile } = require('esbuild')
-const { copy } = require('esbuild-plugin-copy')
 
 async function buildAndAnalyze() {
     try {
@@ -13,16 +12,6 @@ async function buildAndAnalyze() {
             splitting: true,
             format: 'esm',
             outdir: 'dist',
-            plugins: [
-                copy({
-                    resolveFrom: 'cwd',
-                    assets: {
-                        from: ['./LICENCE.txt'],
-                        to: ['./dist'],
-                    },
-                    watch: true,
-                }),
-            ],
         })
 
         const analysis = await analyzeMetafile(result.metafile, { color: true })
