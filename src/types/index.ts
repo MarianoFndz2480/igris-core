@@ -1,19 +1,11 @@
 export type CommonID = string
 
-export interface HandlerInput<T = {}, Q = {}> {
-    token: string
+export interface RequestEvent<T = {}, Q = {}, W = {}> {
     payload: T
     queryParams: Q
+    headers: W
+    token: ''
 }
-
-export type GenericHandlerInput = HandlerInput<{}, {}>
-
-export interface UseCaseInput<T = {}, Q = {}> {
-    payload: T
-    queryParams: Q
-}
-
-export type GenericUseCaseInput = UseCaseInput<{}, {}>
 
 export enum SortEnum {
     DESC = 'DESC',

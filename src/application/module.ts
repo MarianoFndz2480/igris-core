@@ -1,41 +1,33 @@
-import { DatabaseConnector } from './database-connector'
 import { Session } from '../domain'
-import { ApiController } from './api-controller'
-import { AccessManager } from './access-manager'
-import { Authenticator } from './authenticators/authenticator'
+import { RequestAdapter } from './request-adapter'
 import { Handler } from './handler'
-import { InternalError } from './responses.usecase'
 import { UseCase } from './usecase'
+import { ErrorInterceptor } from './interceptor'
+import { Middleware } from './middleware'
+import { RequestEvent } from '../types'
 
 export class Module {
     declare handler: Handler
-    declare dbConnector: DatabaseConnector
-    declare apiController: ApiController
+    declare requestAdapter: RequestAdapter
+    declare errorInterceptor: ErrorInterceptor
+    declare session: () => Session
+    declare middlewares: Middleware[]
 
     constructor(data: {
-        session: Session
-        accessManager: AccessManager
-        authenticators: Authenticator[]
-        dbConnector: DatabaseConnector
-        apiController: ApiController
+        requestAdapter: RequestAdapter
+        errorInterceptor: ErrorInterceptor
+        middlewares: Middleware[]
+        session: () => Session
     }) {
-        this.handler = new Handler(data.session, data.accessManager, data.authenticators)
-        this.apiController = new ApiController()
-        this.dbConnector = data.dbConnector
+        this.requestAdapter = new RequestAdapter()
+        this.errorInterceptor = data.errorInterceptor
+        this.middlewares = data.middlewares
+        this.session = data.session
     }
 
-    async processUseCase(useCase: UseCase<Session>, event: any) {
-        try {
-            await this.dbConnector.connect()
+    async init() {}
 
-            const input = this.apiController.parseInput(event)
-
-            const response = await this.handler.process(useCase, input)
-
-            return this.apiController.parseResponse(response)
-        } catch (err) {
-            console.log(err)
-            return this.apiController.parseResponse(new InternalError())
-        }
+    createHandler(useCase: UseCase<Session, RequestEvent>) {
+        return new Handler(useCase, this.session(), this.middlewares, this.errorInterceptor, this.requestAdapter)
     }
 }

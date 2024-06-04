@@ -1,40 +1,28 @@
-import { CommonListResponse, CommonListResponseMeta, CommonResponse, GenericUseCaseInput } from '../types'
+import { CommonListResponse, CommonListResponseMeta, CommonResponse, RequestEvent } from '../types'
 import { Session } from '../domain/session'
-import { Service } from '../domain/services/service'
+import { Service } from '../domain/service'
 import { Model } from '../domain/model'
-import { SchemaValidator } from './schema-validator'
-import { InternalError, ResponseError, ResponseSuccess } from './responses.usecase'
+import { InternalError, ResponseError, ResponseSuccess } from './responses-usecase'
+import { Middleware } from './middleware'
 
-export class UseCase<
-    AppSession extends Session,
-    UseCaseInput extends GenericUseCaseInput = { queryParams: {}; payload: {} },
-> {
-    declare public: boolean
+export class UseCase<AppSession extends Session, AppRequest extends RequestEvent> {
     declare statusCode: number
-    declare payload: UseCaseInput['payload']
-    declare queryParams: UseCaseInput['queryParams']
-    declare session?: Session
+    declare req: AppRequest
+    declare session: Session
     declare serviceList: Service<Model<{}>>[]
+    declare public: Boolean
+    declare middlewares: Middleware[]
 
     protected setStatusCode(code: number) {
         this.statusCode = code
     }
 
-    setUseCaseInput(data: UseCaseInput) {
-        this.payload = data.payload
-        this.queryParams = data.queryParams
+    setRequest(request: AppRequest) {
+        this.req = request
     }
 
     setSession(session: AppSession) {
         this.session = session
-    }
-
-    public getQueryParamsValidator(): SchemaValidator<any> | null {
-        return null
-    }
-
-    public getPayloadValidator(): SchemaValidator<any> | null {
-        return null
     }
 
     async process(): Promise<ResponseSuccess | ResponseError> {
@@ -65,7 +53,7 @@ export class UseCase<
         this.serviceList.forEach((service) => service.injectSession(this.session as Session))
     }
 
-    protected processData(): Promise<Response> {
+    protected processData(): Promise<CommonResponse<{}> | CommonListResponseMeta> {
         throw new Error('Must be override')
     }
 

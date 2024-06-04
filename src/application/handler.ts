@@ -1,92 +1,58 @@
 import { Session } from '../domain'
-import { ValidatorError } from '../errors'
-import { GenericUseCaseInput, HandlerInput } from '../types'
-import { AccessManager } from './access-manager'
-import { Authenticator } from './authenticators/authenticator'
-import {
-    ForbiddenError,
-    InternalError,
-    InvalidPayloadError,
-    InvalidQueryParamsError,
-    ResponseError,
-    ResponseSuccess,
-} from './responses.usecase'
+import { RequestEvent } from '../types'
+import { RequestAdapter } from './request-adapter'
+import { ErrorInterceptor } from './interceptor'
+import { Middleware } from './middleware'
+import { InternalError, ResponseError } from './responses-usecase'
 import { UseCase } from './usecase'
 
 export class Handler {
-    private declare session: Session
-    private declare accessManager: AccessManager
-    private declare authenticators: Authenticator[]
-    private declare useCase: UseCase<Session>
+    constructor(
+        private readonly useCase: UseCase<Session, RequestEvent>,
+        private readonly session: Session,
+        private readonly middlewares: Middleware[],
+        private readonly errorInterceptor: ErrorInterceptor,
+        private readonly requestAdapter: RequestAdapter,
+    ) {}
 
-    constructor(session: Session, accessManager: AccessManager, authenticators: Authenticator[]) {
-        this.session = session
-        this.accessManager = accessManager
-        this.authenticators = authenticators
-    }
-
-    async process(useCase: UseCase<Session>, input: HandlerInput<{}, {}>): Promise<ResponseSuccess | ResponseError> {
+    async process(externalRequest: any): Promise<{}> {
         try {
-            this.useCase = useCase
+            const request = this.requestAdapter.parseInput(externalRequest)
 
-            await this.setUseCaseInput({
-                payload: input.payload,
-                queryParams: input.queryParams,
-            })
+            await this.useCase.setSession(this.session)
 
-            if (useCase.public) {
-                return useCase.process()
-            }
+            await this.useCase.setRequest(request)
 
-            const authenticatedData = this.authenticators[0].process(input.token) as Parameters<
-                (typeof this.session)['setData']
-            >[0]
+            await this.processMiddlewares()
 
-            this.session.setData(authenticatedData)
+            const response = await this.useCase.process()
 
-            const isAuthorized = this.accessManager.isAuthorized(this.session)
-
-            if (!isAuthorized) {
-                return new ForbiddenError()
-            }
-
-            useCase.setSession(this.session)
-
-            return useCase.process()
+            return this.requestAdapter.parseResponse(response)
         } catch (error) {
-            if (error instanceof ResponseError) {
-                return error
-            }
-            return new InternalError()
+            return await this.handleError(error as Error)
         }
     }
 
-    private async setUseCaseInput(useCaseInput: GenericUseCaseInput) {
-        await this.validateUseCaseInput(useCaseInput)
-        this.useCase.setUseCaseInput(useCaseInput)
+    private async processMiddlewares() {
+        const middlewares = [...this.middlewares, ...this.useCase.middlewares]
+
+        for (const middleware of middlewares) {
+            await this.processMiddleware(middleware)
+        }
     }
 
-    private async validateUseCaseInput(useCaseInput: GenericUseCaseInput) {
-        const payloadValidator = this.useCase.getPayloadValidator()
+    private async processMiddleware(middleware: Middleware) {
+        if (this.useCase.public && !middleware.public) return
+        await middleware.process(this.useCase)
+    }
 
-        if (payloadValidator) {
-            try {
-                await payloadValidator.validate(useCaseInput.payload)
-            } catch (err) {
-                if (err instanceof ValidatorError) throw new InvalidPayloadError(err.message)
-                throw err
-            }
+    async handleError(error: Error) {
+        await this.errorInterceptor.catch(error)
+
+        if (error instanceof ResponseError) {
+            return this.requestAdapter.parseResponse(error)
         }
 
-        const queryParamsValidator = this.useCase.getPayloadValidator()
-
-        if (queryParamsValidator) {
-            try {
-                await queryParamsValidator.validate(useCaseInput.queryParams)
-            } catch (err) {
-                if (err instanceof ValidatorError) throw new InvalidQueryParamsError(err.message)
-                throw err
-            }
-        }
+        return this.requestAdapter.parseResponse(new InternalError())
     }
 }
