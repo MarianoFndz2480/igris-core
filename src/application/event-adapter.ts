@@ -13,7 +13,7 @@ export class EventAdapter {
         return useCaseInput
     }
 
-    parseResponse(response: ResponseSuccess | ResponseError) {
-        return response
+    parseResponse(response: ResponseSuccess | ResponseError): any {
+        return response as any
     }
 }
