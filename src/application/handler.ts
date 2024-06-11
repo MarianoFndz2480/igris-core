@@ -1,33 +1,37 @@
 import { Session } from '../domain'
 import { RequestEvent } from '../types'
-import { RequestAdapter } from './request-adapter'
 import { ErrorInterceptor } from './interceptor'
 import { Middleware } from './middleware'
-import { InternalError, ResponseError } from './responses-usecase'
+import { InternalError, ResponseError, ResponseSuccess } from './responses-usecase'
 import { UseCase } from './usecase'
 
 export class Handler {
-    constructor(
-        private readonly useCase: UseCase<Session, RequestEvent>,
-        private readonly session: Session,
-        private readonly middlewares: Middleware[],
-        private readonly errorInterceptor: ErrorInterceptor,
-        private readonly requestAdapter: RequestAdapter,
-    ) {}
+    private readonly useCase: UseCase<Session, RequestEvent>
+    private readonly session: Session
+    private readonly middlewares: Middleware[]
+    private readonly errorInterceptor: ErrorInterceptor
 
-    async process(externalRequest: any): Promise<{}> {
+    constructor(data: {
+        useCase: UseCase<Session, RequestEvent>
+        session: Session
+        middlewares: Middleware[]
+        errorInterceptor: ErrorInterceptor
+    }) {
+        this.useCase = data.useCase
+        this.session = data.session
+        this.middlewares = data.middlewares
+        this.errorInterceptor = data.errorInterceptor
+    }
+
+    async process(request: any): Promise<ResponseSuccess | ResponseError> {
         try {
-            const request = this.requestAdapter.parseInput(externalRequest)
-
             await this.useCase.setSession(this.session)
 
             await this.useCase.setRequest(request)
 
             await this.processMiddlewares()
 
-            const response = await this.useCase.process()
-
-            return this.requestAdapter.parseResponse(response)
+            return await this.useCase.process()
         } catch (error) {
             return await this.handleError(error as Error)
         }
@@ -50,9 +54,9 @@ export class Handler {
         await this.errorInterceptor.catch(error)
 
         if (error instanceof ResponseError) {
-            return this.requestAdapter.parseResponse(error)
+            return error
         }
 
-        return this.requestAdapter.parseResponse(new InternalError())
+        return new InternalError()
     }
 }

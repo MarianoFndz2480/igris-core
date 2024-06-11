@@ -1,8 +1,8 @@
 import { ResponseError, ResponseSuccess } from './responses-usecase'
 import { RequestEvent } from '../types'
 
-export class RequestAdapter {
-    parseInput(_: any): RequestEvent {
+export class EventAdapter {
+    parseRequest(_: any): RequestEvent {
         const useCaseInput: RequestEvent = {
             payload: {},
             token: '',
@@ -13,7 +13,7 @@ export class RequestAdapter {
         return useCaseInput
     }
 
-    parseResponse(_: ResponseSuccess | ResponseError) {
-        return {}
+    parseResponse(response: ResponseSuccess | ResponseError) {
+        return response
     }
 }
