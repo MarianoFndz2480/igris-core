@@ -10,7 +10,10 @@
         "type-check": "tsc",
         "build:esbuild": "node esbuild.js",
         "build": "npm run build:esbuild && npm run type-check",
-        "publish-prepare": "npm run build"
+        "publish-prepare": "npm run build",
+        "pre-commit": "npm run lint && npm run format && npm run type-check",
+        "release": "echo 'Starting release process' && npm version patch && npm run publish-prepare && npm publish && && git add package.json && echo 'Release process completed'",
+        "pre-push": "npm run release"
     },
     "main": "dist/index.js",
     "types": "dist/src/index.d.ts",
