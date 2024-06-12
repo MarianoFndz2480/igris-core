@@ -8,8 +8,8 @@ import { UseCase } from './usecase'
 export class Handler {
     private readonly useCase: UseCase<Session, RequestEvent>
     private readonly session: Session
-    private readonly middlewares: Middleware[]
     private readonly errorInterceptor: ErrorInterceptor
+    private middlewares: Middleware[]
 
     constructor(data: {
         useCase: UseCase<Session, RequestEvent>
@@ -21,6 +21,10 @@ export class Handler {
         this.session = data.session
         this.middlewares = data.middlewares
         this.errorInterceptor = data.errorInterceptor
+    }
+
+    addMiddlewares(middlewares: Middleware[] = []) {
+        this.middlewares = [...this.middlewares, ...middlewares]
     }
 
     async process(request: any): Promise<ResponseSuccess | ResponseError> {

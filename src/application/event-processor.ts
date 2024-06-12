@@ -7,48 +7,43 @@ import { Middleware } from './middleware'
 import { RequestEvent } from '../types'
 
 export class EventProcessor {
-    private declare readonly errorInterceptor: ErrorInterceptor
-    private declare readonly middlewares: Middleware[]
-    private declare readonly session: () => Session
     private declare readonly handler: Handler
 
-    constructor(useCase: UseCase<Session, RequestEvent>, middlewares: Middleware[] = []) {
+    constructor(useCase: UseCase<Session, RequestEvent>) {
         this.handler = new Handler({
-            useCase: useCase,
-            session: this.session(),
-            middlewares: [...this.middlewares, ...middlewares],
-            errorInterceptor: this.errorInterceptor,
+            useCase,
+            session: EventProcessor.getSession(),
+            middlewares: EventProcessor.getMiddlewares(),
+            errorInterceptor: EventProcessor.getErrorInterceptor(),
         })
     }
 
-    getSession() {
+    static getSession() {
         return new Session()
     }
 
-    getMiddlewares(): Middleware[] {
+    static getMiddlewares(): Middleware[] {
         return []
     }
 
-    getErrorInterceptor(): ErrorInterceptor {
+    static getErrorInterceptor(): ErrorInterceptor {
         return new ErrorInterceptor()
     }
 
-    getEventAdapter(): EventAdapter {
-        throw new Error('Module.getEventAdapterMethod must be override')
+    static getEventAdapter(): EventAdapter {
+        return new EventAdapter()
     }
 
-    async init(): Promise<this> {
-        return this
+    static createInstance(useCase: UseCase<Session, RequestEvent>): EventProcessor {
+        return new EventProcessor(useCase)
     }
 
-    static createHandler(useCase: UseCase<Session, RequestEvent>, middlewares: Middleware[] = []): EventProcessor {
-        return new EventProcessor(useCase, middlewares)
+    async setMiddlewares(middlewares: Middleware[] = []) {
+        this.handler.addMiddlewares(middlewares)
     }
 
     async process(event: any) {
-        await this.init()
-
-        const eventAdapter = this.getEventAdapter()
+        const eventAdapter = EventProcessor.getEventAdapter()
 
         const request = eventAdapter.parseRequest(event)
 

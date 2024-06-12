@@ -4,7 +4,7 @@ export interface RequestEvent<T = {}, Q = {}, W = {}> {
     payload: T
     queryParams: Q
     headers: W
-    token: ''
+    token: string
 }
 
 export enum SortEnum {
