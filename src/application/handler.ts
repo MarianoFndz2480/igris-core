@@ -1,18 +1,18 @@
 import { Session } from '../domain'
-import { RequestEvent } from '../types'
+import { CommonRequest } from '../types'
 import { ErrorInterceptor } from './interceptor'
 import { Middleware } from './middleware'
 import { InternalError, ResponseError, ResponseSuccess } from './responses-usecase'
 import { UseCase } from './usecase'
 
 export class Handler {
-    private readonly useCase: UseCase<Session, RequestEvent>
+    private readonly useCase: UseCase<Session, CommonRequest>
     private readonly session: Session
     private readonly errorInterceptor: ErrorInterceptor
     private middlewares: Middleware[] = []
 
     constructor(data: {
-        useCase: UseCase<Session, RequestEvent>
+        useCase: UseCase<Session, CommonRequest>
         session: Session
         errorInterceptor: ErrorInterceptor
     }) {

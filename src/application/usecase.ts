@@ -1,10 +1,10 @@
-import { CommonListResponse, CommonListResponseMeta, CommonResponse, RequestEvent } from '../types'
+import { CommonListResponse, CommonListResponseMeta, CommonResponse, CommonRequest } from '../types'
 import { Session } from '../domain/session'
 import { Service } from '../domain/service'
 import { Model } from '../domain/model'
 import { InternalError, ResponseError, ResponseSuccess } from './responses-usecase'
 
-export class UseCase<AppSession extends Session, AppRequest extends RequestEvent> {
+export class UseCase<AppSession extends Session, AppRequest extends CommonRequest> {
     declare statusCode: number
     declare req: AppRequest
     declare session: Session

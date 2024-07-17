@@ -1,9 +1,9 @@
 import { ResponseError, ResponseSuccess } from './responses-usecase'
-import { RequestEvent } from '../types'
+import { CommonRequest } from '../types'
 
-export class EventAdapter {
-    parseRequest(_: any): RequestEvent {
-        const useCaseInput: RequestEvent = {
+export class RequestAdapter {
+    parseRequest(_: any): CommonRequest {
+        const useCaseInput: CommonRequest = {
             payload: {},
             token: '',
             queryParams: {},

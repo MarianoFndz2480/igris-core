@@ -1,6 +1,6 @@
 export type CommonID = string
 
-export interface RequestEvent<T = {}, Q = {}, W = {}> {
+export interface CommonRequest<T = {}, Q = {}, W = {}> {
     payload: T
     queryParams: Q
     headers: W
