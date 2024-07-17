@@ -9,18 +9,20 @@ export class Handler {
     private readonly useCase: UseCase<Session, RequestEvent>
     private readonly session: Session
     private readonly errorInterceptor: ErrorInterceptor
-    private middlewares: Middleware[]
+    private middlewares: Middleware[] = []
 
     constructor(data: {
         useCase: UseCase<Session, RequestEvent>
         session: Session
-        middlewares: Middleware[]
         errorInterceptor: ErrorInterceptor
     }) {
         this.useCase = data.useCase
         this.session = data.session
-        this.middlewares = data.middlewares
         this.errorInterceptor = data.errorInterceptor
+    }
+
+    static getMiddlewares(): Middleware[] {
+        return []
     }
 
     addMiddlewares(middlewares: Middleware[] = []) {
@@ -42,7 +44,7 @@ export class Handler {
     }
 
     private async processMiddlewares() {
-        const middlewares = [...this.middlewares, ...this.useCase.middlewares]
+        const middlewares = [...this.middlewares, ...Handler.getMiddlewares()]
 
         for (const middleware of middlewares) {
             await this.processMiddleware(middleware)

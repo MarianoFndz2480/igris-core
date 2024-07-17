@@ -3,7 +3,6 @@ import { Session } from '../domain/session'
 import { Service } from '../domain/service'
 import { Model } from '../domain/model'
 import { InternalError, ResponseError, ResponseSuccess } from './responses-usecase'
-import { Middleware } from './middleware'
 
 export class UseCase<AppSession extends Session, AppRequest extends RequestEvent> {
     declare statusCode: number
@@ -11,7 +10,6 @@ export class UseCase<AppSession extends Session, AppRequest extends RequestEvent
     declare session: Session
     declare serviceList: Service<Model<{}>>[]
     declare public: Boolean
-    declare middlewares: Middleware[]
 
     protected setStatusCode(code: number) {
         this.statusCode = code

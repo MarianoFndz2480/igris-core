@@ -5,24 +5,30 @@ import { UseCase } from './usecase'
 import { ErrorInterceptor } from './interceptor'
 import { Middleware } from './middleware'
 import { RequestEvent } from '../types'
+import { EventProcessorMiddleware } from './event-processor-middleware'
 
 export class EventProcessor {
     private declare readonly handler: Handler
 
     constructor(useCase: UseCase<Session, RequestEvent>) {
-        this.handler = new Handler({
+        const handlerClass = EventProcessor.getHandlerClass()
+
+        this.handler = new handlerClass({
             useCase,
             session: EventProcessor.getSession(),
-            middlewares: EventProcessor.getMiddlewares(),
             errorInterceptor: EventProcessor.getErrorInterceptor(),
         })
+    }
+
+    static getHandlerClass(): typeof Handler {
+        return Handler
     }
 
     static getSession() {
         return new Session()
     }
 
-    static getMiddlewares(): Middleware[] {
+    static getMiddlewares(): EventProcessorMiddleware[] {
         return []
     }
 
@@ -47,8 +53,16 @@ export class EventProcessor {
 
         const request = eventAdapter.parseRequest(event)
 
+        await this.processMiddlewares(event, request)
+
         const response = await this.handler.process(request)
 
         return eventAdapter.parseResponse(response)
+    }
+
+    private async processMiddlewares(event: any, request: RequestEvent<{}, {}, {}>) {
+        for (const middleware of EventProcessor.getMiddlewares()) {
+            await middleware.process(event, request)
+        }
     }
 }
