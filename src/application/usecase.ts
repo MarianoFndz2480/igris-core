@@ -8,7 +8,7 @@ export class UseCase<AppSession extends Session, AppRequest extends CommonReques
     declare statusCode: number
     declare req: AppRequest
     declare session: Session
-    declare serviceList: Service<Model<{}>>[]
+    declare serviceList: Service[]
     declare public: Boolean
 
     protected setStatusCode(code: number) {
@@ -40,7 +40,7 @@ export class UseCase<AppSession extends Session, AppRequest extends CommonReques
     private addServicesToList() {
         for (const prop in this) {
             if (this[prop] instanceof Service) {
-                this.serviceList.push(this[prop] as Service<Model<{}>>)
+                this.serviceList.push(this[prop] as Service)
             }
         }
     }
