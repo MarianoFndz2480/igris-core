@@ -42,6 +42,10 @@ export class Entity<Data extends object = {}, Entities extends Record<string, En
             }
         })
     }
+
+    getPublicData(): any {
+        return {}
+    }
 }
 
 export class MutableEntity<
@@ -62,8 +66,4 @@ export class MutableEntity<
     update(props: DataToUpdate) {
         Object.keys(props).forEach((prop) => ((this as any)[prop] = (props as any)[prop]))
     }
-}
-
-export interface PublicEntity<T> {
-    getPublicData(): T
 }
