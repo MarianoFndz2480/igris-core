@@ -1,5 +1,5 @@
 import { Session } from './session'
-import { MutableModel } from './model'
+import { MutableEntity } from './entity'
 import { CommonID } from '../types'
 import { NotFoundError } from '../application'
 
@@ -30,16 +30,16 @@ export abstract class Service {
     }
 }
 
-export abstract class MutableService<M extends MutableModel<{ id: CommonID }, {}>> extends Service {
-    async update(model: M): Promise<M> {
-        if (!model.isValidToUpdate()) return model
+export abstract class MutableService<M extends MutableEntity<{ id: CommonID }, {}>> extends Service {
+    async update(entity: M): Promise<M> {
+        if (!entity.isValidToUpdate()) return entity
 
-        const updatedModel = await this.updateModel(model)
+        const updatedEntity = await this.updateEntity(entity)
 
-        if (!updatedModel) throw new NotFoundError(this.constructor.name.split('Service')[0])
+        if (!updatedEntity) throw new NotFoundError(this.constructor.name.split('Service')[0])
 
-        return updatedModel
+        return updatedEntity
     }
 
-    abstract updateModel(model: M): Promise<M | null>
+    abstract updateEntity(entity: M): Promise<M | null>
 }
