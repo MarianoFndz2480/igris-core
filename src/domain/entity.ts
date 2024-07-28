@@ -6,11 +6,9 @@ export interface PublicEntity<T> {
 }
 
 export class Entity<Data extends object, Entities extends Record<string, Entity<{}, {}>> = {}> {
-    protected declare oldData: Data
-
     constructor(data: Data, entities?: Entities) {
         this.setData(data)
-        this.oldData = { ...data }
+        this.setOldData()
         if (entities) this.setEntities(entities)
     }
 
@@ -23,6 +21,16 @@ export class Entity<Data extends object, Entities extends Record<string, Entity<
                 ;(this as any)[prop] = (data as any)[prop]
             }
         })
+    }
+
+    setOldData() {
+        const constructor = this.constructor as ClassConstructor
+        constructor._oldData = { ...this }
+    }
+
+    getOldData(): Data {
+        const constructor = this.constructor as ClassConstructor
+        return { ...constructor._oldData } as Data
     }
 
     setEntities(entities: Entities) {
@@ -46,7 +54,8 @@ export class MutableEntity<
     Entities extends Record<string, Entity<{}, {}>> = {},
 > extends Entity<Data, Entities> {
     getDataToUpdate() {
-        return getDifferences(this.oldData, { ...this })
+        const constructor = this.constructor as ClassConstructor
+        return getDifferences(constructor._oldData, { ...this })
     }
 
     isValidToUpdate(): boolean {

@@ -2,6 +2,7 @@ export interface ClassConstructor {
     new (...args: any[]): any
     _properties?: string[]
     _entities?: [string, any][]
+    _oldData: any
 }
 
 export function Property(target: any, propertyKey: string) {
