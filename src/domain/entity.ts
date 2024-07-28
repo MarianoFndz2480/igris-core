@@ -1,11 +1,7 @@
 import { getDifferences } from '../utils'
 import { ClassConstructor } from './entity.decorators'
 
-export interface PublicEntity<T> {
-    getPublicData(): T
-}
-
-export class Entity<Data extends object, Entities extends Record<string, Entity<{}, {}>> = {}> {
+export class Entity<Data extends object = {}, Entities extends Record<string, Entity<{}, {}>> = {}> {
     constructor(data: Data, entities?: Entities) {
         this.setData(data)
         this.setOldData()
@@ -66,4 +62,8 @@ export class MutableEntity<
     update(props: DataToUpdate) {
         Object.keys(props).forEach((prop) => ((this as any)[prop] = (props as any)[prop]))
     }
+}
+
+export interface PublicEntity<T> {
+    getPublicData(): T
 }

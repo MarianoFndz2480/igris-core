@@ -1,6 +1,5 @@
 import { Session } from './session'
-import { MutableEntity } from './entity'
-import { CommonID } from '../types'
+import { Entity, MutableEntity } from './entity'
 import { NotFoundError } from '../application'
 
 export abstract class Service {
@@ -10,28 +9,15 @@ export abstract class Service {
         this.session = session
     }
 
-    abstract generateId(): CommonID
-
-    get createCommonProps() {
-        return {
-            ...this.createCommonPropsWithoutUpdatedAt,
-            updatedAt: new Date().toISOString(),
-        }
-    }
-
-    get createCommonPropsWithoutUpdatedAt() {
-        return {
-            createdAt: new Date().toISOString(),
-        }
-    }
-
     getServiceName() {
         return this.constructor.name.split('Service')[0]
     }
 }
 
-export abstract class MutableService<M extends MutableEntity<{ id: CommonID }, {}>> extends Service {
-    async update(entity: M): Promise<M> {
+export abstract class EntityService<T extends Entity> extends Service {
+    async update(entity: T): Promise<T> {
+        if (!(entity instanceof MutableEntity)) return entity
+
         if (!entity.isValidToUpdate()) return entity
 
         const updatedEntity = await this.updateEntity(entity)
@@ -41,5 +27,7 @@ export abstract class MutableService<M extends MutableEntity<{ id: CommonID }, {
         return updatedEntity
     }
 
-    abstract updateEntity(entity: M): Promise<M | null>
+    async updateEntity(entity: T): Promise<T | null> {
+        return entity
+    }
 }
