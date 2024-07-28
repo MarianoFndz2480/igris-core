@@ -40,7 +40,11 @@ export class Entity<Data extends object, Entities extends Record<string, Entity<
     }
 }
 
-export class MutableEntity<Data extends object, DataToUpdate extends object> extends Entity<Data> {
+export class MutableEntity<
+    Data extends object,
+    DataToUpdate extends object,
+    Entities extends Record<string, Entity<{}, {}>> = {},
+> extends Entity<Data, Entities> {
     getDataToUpdate() {
         return getDifferences(this.oldData, { ...this })
     }
