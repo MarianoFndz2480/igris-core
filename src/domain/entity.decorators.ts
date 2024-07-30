@@ -21,3 +21,15 @@ export function AdditionalEntity(target: any, propertyKey: string) {
 
     constructor._entities.push([propertyKey, target[propertyKey].constructor])
 }
+
+export function AdditionalEntities(elementType: any) {
+    return function (target: any, propertyKey: string) {
+        const constructor = target.constructor as ClassConstructor
+
+        if (!constructor._entities) {
+            constructor._entities = []
+        }
+
+        constructor._entities.push([propertyKey, elementType])
+    }
+}

@@ -33,12 +33,15 @@ export class Entity<Data extends object = {}, Entities extends Record<string, En
         const constructor = this.constructor as ClassConstructor
         const constructorEntities = constructor._entities || []
 
-        const entitiesArray = Object.values(entities)
+        const entitiesValues = Object.values(entities)
 
         constructorEntities.forEach(([prop, entityClass]) => {
-            const entityInstance = entitiesArray.find((entity) => entity instanceof entityClass)
-            if (entityInstance) {
-                ;(this as any)[prop] = entityInstance
+            const entityToSave = entitiesValues.find(
+                (entity) =>
+                    entity instanceof entityClass || (Array.isArray(entity) && entity[0] instanceof entityClass),
+            )
+            if (entityToSave) {
+                ;(this as any)[prop] = entityToSave
             }
         })
     }
