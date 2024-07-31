@@ -1,7 +1,8 @@
+import { AdditionalEntitiesTypes } from '../types'
 import { getDifferences } from '../utils'
 import { ClassConstructor } from './entity.decorators'
 
-export class Entity<Data extends object = {}, Entities extends Record<string, Entity<{}, {}>> = {}> {
+export class Entity<Data extends object = {}, Entities extends AdditionalEntitiesTypes = {}> {
     constructor(data: Data, entities?: Entities) {
         this.setData(data)
         this.setOldData()
@@ -54,7 +55,7 @@ export class Entity<Data extends object = {}, Entities extends Record<string, En
 export class MutableEntity<
     Data extends object,
     DataToUpdate extends object,
-    Entities extends Record<string, Entity<{}, {}>> = {},
+    Entities extends AdditionalEntitiesTypes = {},
 > extends Entity<Data, Entities> {
     getDataToUpdate() {
         const constructor = this.constructor as ClassConstructor
