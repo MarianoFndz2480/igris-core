@@ -3,10 +3,10 @@ import { Session } from '../domain/session'
 import { Service } from '../domain/service'
 import { InternalError, ResponseError, ResponseSuccess } from './responses-usecase'
 
-export class UseCase<AppSession extends Session, AppRequest extends CommonRequest> {
+export class UseCase<AppSession extends Session = Session, AppRequest extends CommonRequest = CommonRequest> {
     declare statusCode: number
     declare req: AppRequest
-    declare session: Session
+    declare session: AppSession
     declare serviceList: Service[]
     declare public: Boolean
 
@@ -30,7 +30,6 @@ export class UseCase<AppSession extends Session, AppRequest extends CommonReques
 
             return new ResponseSuccess(this.statusCode, response) as ResponseSuccess
         } catch (err) {
-            console.log('🚀 ~ file: usecase.ts:62 ~ UseCase<Response ~ err:', err)
             if (err instanceof ResponseError) return err
             return new InternalError()
         }
