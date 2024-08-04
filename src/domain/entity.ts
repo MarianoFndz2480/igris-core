@@ -1,6 +1,6 @@
 import { AdditionalEntitiesTypes } from '../types'
 import { getDifferences } from '../utils'
-import { ClassConstructor } from './entity.decorators'
+import { EntityClassConstructor } from './entity.decorators'
 
 export class Entity<Data extends object = {}, Entities extends AdditionalEntitiesTypes = {}> {
     constructor(data: Data, entities?: Entities) {
@@ -10,7 +10,7 @@ export class Entity<Data extends object = {}, Entities extends AdditionalEntitie
     }
 
     setData(data: Data) {
-        const constructor = this.constructor as ClassConstructor
+        const constructor = this.constructor as EntityClassConstructor
         const constructorProperties = constructor._properties || []
 
         constructorProperties.forEach((prop) => {
@@ -21,17 +21,17 @@ export class Entity<Data extends object = {}, Entities extends AdditionalEntitie
     }
 
     setOldData() {
-        const constructor = this.constructor as ClassConstructor
+        const constructor = this.constructor as EntityClassConstructor
         constructor._oldData = { ...this }
     }
 
     getOldData(): Data {
-        const constructor = this.constructor as ClassConstructor
+        const constructor = this.constructor as EntityClassConstructor
         return { ...constructor._oldData } as Data
     }
 
     setEntities(entities: Entities) {
-        const constructor = this.constructor as ClassConstructor
+        const constructor = this.constructor as EntityClassConstructor
         const constructorEntities = constructor._entities || []
 
         const entitiesValues = Object.values(entities)
@@ -58,7 +58,7 @@ export class MutableEntity<
     Entities extends AdditionalEntitiesTypes = {},
 > extends Entity<Data, Entities> {
     getDataToUpdate() {
-        const constructor = this.constructor as ClassConstructor
+        const constructor = this.constructor as EntityClassConstructor
         return getDifferences(constructor._oldData, { ...this })
     }
 

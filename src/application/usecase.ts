@@ -2,13 +2,36 @@ import { CommonListResponse, CommonListResponseMeta, CommonResponse, CommonReque
 import { Session } from '../domain/session'
 import { Service } from '../domain/service'
 import { InternalError, ResponseError, ResponseSuccess } from './responses-usecase'
+import { UseCaseClassConstructor } from './aplication.decorators'
 
-export class UseCase<AppSession extends Session = Session, AppRequest extends CommonRequest = CommonRequest> {
+export class UseCase<
+    AppSession extends Session = Session,
+    AppRequest extends CommonRequest = CommonRequest,
+    Dependencies extends Record<string, any> = {},
+> {
     declare statusCode: number
     declare req: AppRequest
     declare session: AppSession
     declare serviceList: Service[]
     declare public: Boolean
+
+    constructor(dependencies: Dependencies) {
+        this.setDependencies(dependencies)
+    }
+
+    private setDependencies(dependencies: Dependencies) {
+        const constructor = this.constructor as UseCaseClassConstructor
+        const constructorDependencies = constructor._dependencies || []
+
+        const dependenciesValues = Object.values(dependencies)
+
+        constructorDependencies.forEach(([prop, dependencyClass]) => {
+            const dependencyToSave = dependenciesValues.find((dependency) => dependency instanceof dependencyClass)
+            if (dependencyToSave) {
+                ;(this as any)[prop] = dependencyToSave
+            }
+        })
+    }
 
     protected setStatusCode(code: number) {
         this.statusCode = code
@@ -35,18 +58,18 @@ export class UseCase<AppSession extends Session = Session, AppRequest extends Co
         }
     }
 
+    private injectSessionToServices() {
+        if (!this.session) return
+        this.addServicesToList()
+        this.serviceList.forEach((service) => service.injectSession(this.session as Session))
+    }
+
     private addServicesToList() {
         for (const prop in this) {
             if (this[prop] instanceof Service) {
                 this.serviceList.push(this[prop] as Service)
             }
         }
-    }
-
-    private injectSessionToServices() {
-        if (!this.session) return
-        this.addServicesToList()
-        this.serviceList.forEach((service) => service.injectSession(this.session as Session))
     }
 
     protected processData(): Promise<CommonResponse<{}> | CommonListResponseMeta> {
