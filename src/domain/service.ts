@@ -1,8 +1,9 @@
 import { Session } from './session'
 import { Entity, MutableEntity } from './entity'
 import { NotFoundError } from '../application'
+import { BaseClass } from '../shared/base-class'
 
-export abstract class Service {
+export abstract class Service<Dependencies extends Record<string, any> = {}> extends BaseClass<Dependencies> {
     protected declare session: Session
 
     injectSession(session: Session) {

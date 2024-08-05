@@ -2,36 +2,18 @@ import { CommonListResponse, CommonListResponseMeta, CommonResponse, CommonReque
 import { Session } from '../domain/session'
 import { Service } from '../domain/service'
 import { InternalError, ResponseError, ResponseSuccess } from './responses-usecase'
-import { UseCaseClassConstructor } from './aplication.decorators'
+import { BaseClass } from '../shared/base-class'
 
 export class UseCase<
     AppSession extends Session = Session,
     AppRequest extends CommonRequest = CommonRequest,
     Dependencies extends Record<string, any> = {},
-> {
+> extends BaseClass<Dependencies> {
     declare statusCode: number
     declare req: AppRequest
     declare session: AppSession
     declare serviceList: Service[]
     declare public: Boolean
-
-    constructor(dependencies: Dependencies) {
-        this.setDependencies(dependencies)
-    }
-
-    private setDependencies(dependencies: Dependencies) {
-        const constructor = this.constructor as UseCaseClassConstructor
-        const constructorDependencies = constructor._dependencies || []
-
-        const dependenciesValues = Object.values(dependencies)
-
-        constructorDependencies.forEach(([prop, dependencyClass]) => {
-            const dependencyToSave = dependenciesValues.find((dependency) => dependency instanceof dependencyClass)
-            if (dependencyToSave) {
-                ;(this as any)[prop] = dependencyToSave
-            }
-        })
-    }
 
     protected setStatusCode(code: number) {
         this.statusCode = code
