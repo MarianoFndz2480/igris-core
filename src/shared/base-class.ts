@@ -9,12 +9,9 @@ export abstract class BaseClass<Dependencies extends Record<string, any> = {}> {
         const constructor = this.constructor as BaseClassClassConstructor
         const constructorDependencies = constructor._dependencies || []
 
-        const dependenciesValues = Object.values(dependencies)
-
-        constructorDependencies.forEach(([prop, dependencyClass]) => {
-            const dependencyToSave = dependenciesValues.find((dependency) => dependency instanceof dependencyClass)
-            if (dependencyToSave) {
-                ;(this as any)[prop] = dependencyToSave
+        constructorDependencies.forEach((prop) => {
+            if (prop in dependencies) {
+                ;(this as any)[prop] = (dependencies as any)[prop]
             }
         })
     }

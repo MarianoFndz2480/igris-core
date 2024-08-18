@@ -39,15 +39,9 @@ export class Entity<Data extends object = {}, Entities extends AdditionalEntitie
         const constructor = this.constructor as EntityClassConstructor
         const constructorEntities = constructor._entities || []
 
-        const entitiesValues = Object.values(entities)
-
-        constructorEntities.forEach(([prop, entityClass]) => {
-            const entityToSave = entitiesValues.find(
-                (entity) =>
-                    entity instanceof entityClass || (Array.isArray(entity) && entity[0] instanceof entityClass),
-            )
-            if (entityToSave) {
-                ;(this as any)[prop] = entityToSave
+        constructorEntities.forEach((prop) => {
+            if (prop in entities) {
+                ;(this as any)[prop] = (entities as any)[prop]
             }
         })
     }

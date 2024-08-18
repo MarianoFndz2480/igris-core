@@ -1,14 +1,11 @@
 export interface BaseClassClassConstructor {
     new (...args: any[]): any
-    _dependencies?: [string, any][]
+    _dependencies?: string[]
 }
 
 export function Dependency(target: any, propertyKey: string) {
-    const constructor = target.constructor as BaseClassClassConstructor
-
-    if (!constructor._dependencies) {
-        constructor._dependencies = []
+    if (!target.constructor._dependencies) {
+        target.constructor._dependencies = []
     }
-
-    constructor._dependencies.push([propertyKey, target[propertyKey].constructor])
+    target.constructor._dependencies.push(propertyKey)
 }

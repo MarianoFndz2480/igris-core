@@ -1,7 +1,7 @@
 export interface EntityClassConstructor {
     new (...args: any[]): any
     _properties?: string[]
-    _entities?: [string, any][]
+    _entities?: string[]
     _oldData: any
 }
 
@@ -19,17 +19,5 @@ export function AdditionalEntity(target: any, propertyKey: string) {
         constructor._entities = []
     }
 
-    constructor._entities.push([propertyKey, target[propertyKey].constructor])
-}
-
-export function AdditionalEntities(elementType: any) {
-    return function (target: any, propertyKey: string) {
-        const constructor = target.constructor as EntityClassConstructor
-
-        if (!constructor._entities) {
-            constructor._entities = []
-        }
-
-        constructor._entities.push([propertyKey, elementType])
-    }
+    constructor._entities.push(propertyKey)
 }
