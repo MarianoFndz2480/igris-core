@@ -11,12 +11,13 @@ export class RequestProcessor {
     private declare readonly handler: Handler
 
     constructor(useCase: UseCase<Session, CommonRequest>) {
-        const handlerClass = RequestProcessor.getHandlerClass()
+        const constructor = this.constructor as typeof RequestProcessor
+        const handlerClass = constructor.getHandlerClass()
 
         this.handler = new handlerClass({
             useCase,
-            session: RequestProcessor.getSession(),
-            errorInterceptor: RequestProcessor.getErrorInterceptor(),
+            session: constructor.getSession(),
+            errorInterceptor: constructor.getErrorInterceptor(),
         })
     }
 
@@ -41,7 +42,7 @@ export class RequestProcessor {
     }
 
     static createInstance(useCase: UseCase<Session, CommonRequest>): RequestProcessor {
-        return new RequestProcessor(useCase)
+        return new (this.constructor as typeof RequestProcessor)(useCase)
     }
 
     async setMiddlewares(middlewares: Middleware[] = []) {
@@ -49,7 +50,7 @@ export class RequestProcessor {
     }
 
     async process(rawRequest: any) {
-        const requestAdapter = RequestProcessor.getRequestAdapter()
+        const requestAdapter = (this.constructor as typeof RequestProcessor).getRequestAdapter()
 
         const request = requestAdapter.parseRequest(rawRequest)
 
@@ -61,7 +62,7 @@ export class RequestProcessor {
     }
 
     private async processMiddlewares(rawRequest: any, request: CommonRequest<{}, {}, {}>) {
-        for (const middleware of RequestProcessor.getMiddlewares()) {
+        for (const middleware of (this.constructor as typeof RequestProcessor).getMiddlewares()) {
             await middleware.process(rawRequest, request)
         }
     }
