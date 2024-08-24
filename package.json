@@ -10,9 +10,9 @@
         "build:esbuild": "node esbuild.js",
         "build": "npm run build:esbuild && npm run type-check",
         "pre-commit": "npm run lint && npm run format && npm run type-check",
-        "release:patch": "echo 'Starting patch release process' && npm version patch & && npm publish && git add package.json && echo 'Release process completed'",
-        "release:minor": "echo 'Starting minor release process' && npm version minor & && npm publish && git add package.json && echo 'Release process completed'",
-        "release:major": "echo 'Starting minor release process' && npm version major & && npm publish && git add package.json && echo 'Release process completed'"
+        "release:patch": "echo 'Starting patch release process' && npm version patch && npm publish && git add package.json && echo 'Release process completed'",
+        "release:minor": "echo 'Starting minor release process' && npm version minor && npm publish && git add package.json && echo 'Release process completed'",
+        "release:major": "echo 'Starting minor release process' && npm version major && npm publish && git add package.json && echo 'Release process completed'"
     },
     "main": "src/index.js",
     "keywords": [],
