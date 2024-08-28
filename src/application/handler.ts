@@ -21,10 +21,6 @@ export class Handler {
         this.errorInterceptor = data.errorInterceptor
     }
 
-    static getMiddlewares(): Middleware[] {
-        return []
-    }
-
     addMiddlewares(middlewares: Middleware[] = []) {
         this.middlewares = [...this.middlewares, ...middlewares]
     }
@@ -44,7 +40,7 @@ export class Handler {
     }
 
     private async processMiddlewares() {
-        const middlewares = [...this.middlewares, ...Handler.getMiddlewares()]
+        const middlewares = [...this.middlewares]
 
         for (const middleware of middlewares) {
             await this.processMiddleware(middleware)

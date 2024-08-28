@@ -14,10 +14,11 @@ export class RequestProcessor {
     }
 
     async setMiddlewares(middlewares: Middleware[] = []) {
-        this.handler.addMiddlewares(middlewares)
+        if (this.handler) this.handler.addMiddlewares(middlewares)
+        return this
     }
 
-    async process(useCase: UseCase<Session, CommonRequest>, rawRequest: any) {
+    createHandler(useCase: UseCase<Session, CommonRequest>) {
         const handlerClass = this.config.getHandlerClass()
 
         this.handler = new handlerClass({
@@ -26,6 +27,10 @@ export class RequestProcessor {
             errorInterceptor: this.config.getErrorInterceptor(),
         })
 
+        return this
+    }
+
+    async process(rawRequest: any) {
         const requestAdapter = this.config.getRequestAdapter()
 
         const request = requestAdapter.parseRequest(rawRequest)
