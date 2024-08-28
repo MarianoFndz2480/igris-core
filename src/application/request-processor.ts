@@ -1,56 +1,32 @@
 import { Session } from '../domain'
-import { RequestAdapter } from './request-adapter'
 import { Handler } from './handler'
 import { UseCase } from './usecase'
-import { ErrorInterceptor } from './interceptor'
 import { Middleware } from './middleware'
 import { CommonRequest } from '../types'
-import { RequestProcessorMiddleware } from './request-processor-middleware'
+import { RequestProcessorConfig } from './request-processor-config'
 
 export class RequestProcessor {
-    private declare readonly handler: Handler
+    private declare handler: Handler
+    private declare config: RequestProcessorConfig
 
-    constructor(useCase: UseCase<Session, CommonRequest>) {
-        const constructor = this.constructor as typeof RequestProcessor
-        const handlerClass = constructor.getHandlerClass()
-
-        this.handler = new handlerClass({
-            useCase,
-            session: constructor.getSession(),
-            errorInterceptor: constructor.getErrorInterceptor(),
-        })
-    }
-
-    static getHandlerClass(): typeof Handler {
-        return Handler
-    }
-
-    static getSession() {
-        return new Session()
-    }
-
-    static getMiddlewares(): RequestProcessorMiddleware[] {
-        return []
-    }
-
-    static getErrorInterceptor(): ErrorInterceptor {
-        return new ErrorInterceptor()
-    }
-
-    static getRequestAdapter(): RequestAdapter {
-        return new RequestAdapter()
-    }
-
-    static createInstance(useCase: UseCase<Session, CommonRequest>): RequestProcessor {
-        return new (this.constructor as typeof RequestProcessor)(useCase)
+    constructor(requestProcessorConfig: RequestProcessorConfig) {
+        this.config = requestProcessorConfig
     }
 
     async setMiddlewares(middlewares: Middleware[] = []) {
         this.handler.addMiddlewares(middlewares)
     }
 
-    async process(rawRequest: any) {
-        const requestAdapter = (this.constructor as typeof RequestProcessor).getRequestAdapter()
+    async process(useCase: UseCase<Session, CommonRequest>, rawRequest: any) {
+        const handlerClass = this.config.getHandlerClass()
+
+        this.handler = new handlerClass({
+            useCase,
+            session: this.config.getSession(),
+            errorInterceptor: this.config.getErrorInterceptor(),
+        })
+
+        const requestAdapter = this.config.getRequestAdapter()
 
         const request = requestAdapter.parseRequest(rawRequest)
 
@@ -62,7 +38,7 @@ export class RequestProcessor {
     }
 
     private async processMiddlewares(rawRequest: any, request: CommonRequest<{}, {}, {}>) {
-        for (const middleware of (this.constructor as typeof RequestProcessor).getMiddlewares()) {
+        for (const middleware of this.config.getMiddlewares()) {
             await middleware.process(rawRequest, request)
         }
     }
