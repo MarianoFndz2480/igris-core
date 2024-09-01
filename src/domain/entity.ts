@@ -1,7 +1,7 @@
 import { BaseClass } from '../shared/base-class'
 import { AdditionalEntitiesTypes } from '../types'
 import { getDifferences } from '../utils'
-import { EntityClassConstructor } from './entity.decorators'
+import { EntityClassConstructor } from './entity-decorators'
 
 export class Entity<Data extends object = {}, Entities extends AdditionalEntitiesTypes = {}> extends BaseClass<{
     data: Data

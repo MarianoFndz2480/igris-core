@@ -1,5 +1,5 @@
-import { ResponseError, ResponseSuccess } from './responses-usecase'
-import { CommonRequest } from '../types'
+import { CommonRequest } from '../../types'
+import { ResponseError, ResponseSuccess } from '../responses-usecase'
 
 export class RequestAdapter {
     parseRequest(_: any): CommonRequest {
