@@ -14,7 +14,7 @@
         "release:minor": "echo 'Starting minor release process' && npm version minor && npm publish && git add package.json && echo 'Release process completed'",
         "release:major": "echo 'Starting minor release process' && npm version major && npm publish && git add package.json && echo 'Release process completed'"
     },
-    "main": "src/index.js",
+    "main": "src/index.ts",
     "keywords": [],
     "author": "Mariano Fernandez",
     "license": "MIT",
