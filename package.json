@@ -1,6 +1,6 @@
 {
     "name": "igris-core",
-    "version": "0.16.3",
+    "version": "0.16.4",
     "description": "The core of the Igris framework",
     "scripts": {
         "lint": "eslint --fix",
