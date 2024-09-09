@@ -7,7 +7,7 @@
         "esModuleInterop": true,
         "skipLibCheck": true,
         "outDir": "dist",
-        "rootDir": ".",
+        "rootDir": "src",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "noUnusedLocals": true,
@@ -19,7 +19,8 @@
             "*": ["node_modules/*"]
         },
         "declaration": true,
-        "emitDeclarationOnly": false
+        "declarationMap": true,
+        "sourceMap": true
     },
     "include": ["src/**/*.ts"],
     "exclude": ["node_modules", "dist"]

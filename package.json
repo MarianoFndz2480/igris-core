@@ -2,22 +2,28 @@
     "name": "igris-core",
     "version": "0.16.4",
     "description": "The core of the Igris framework",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "source": "dist/index.js",
     "scripts": {
         "lint": "eslint --fix",
         "format": "prettier --write .",
         "prepare": "husky install",
         "type-check": "tsc",
-        "build:esbuild": "node esbuild.js",
-        "build": "npm run build:esbuild && npm run type-check",
         "pre-commit": "npm run lint && npm run format && npm run type-check",
         "release:patch": "echo 'Starting patch release process' && npm version patch && npm publish && git add package.json && echo 'Release process completed'",
         "release:minor": "echo 'Starting minor release process' && npm version minor && npm publish && git add package.json && echo 'Release process completed'",
         "release:major": "echo 'Starting minor release process' && npm version major && npm publish && git add package.json && echo 'Release process completed'"
     },
-    "main": "src/index.ts",
     "keywords": [],
     "author": "Mariano Fernandez",
     "license": "MIT",
+    "files": [
+        "dist/**/*"
+    ],
+    "engines": {
+        "node": ">=16.x"
+    },
     "devDependencies": {
         "@types/node": "^20.12.2",
         "@typescript-eslint/eslint-plugin": "^5.62.0",
@@ -31,5 +37,8 @@
         "prettier": "^2.8.8",
         "ts-node": "^10.9.2",
         "typescript": "^5.4.3"
+    },
+    "dependencies": {
+        "rimraf": "^6.0.1"
     }
 }
