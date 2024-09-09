@@ -19,7 +19,7 @@
             "*": ["node_modules/*"]
         },
         "declaration": true,
-        "emitDeclarationOnly": true
+        "emitDeclarationOnly": false
     },
     "include": ["src/**/*.ts"],
     "exclude": ["node_modules", "dist"]
