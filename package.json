@@ -19,7 +19,8 @@
     "author": "Mariano Fernandez",
     "license": "MIT",
     "files": [
-        "dist/**/*"
+        "dist/**/*",
+        "src/**/*.ts"
     ],
     "engines": {
         "node": ">=16.x"
