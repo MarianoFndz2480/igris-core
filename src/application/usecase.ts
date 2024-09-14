@@ -49,6 +49,7 @@ export class UseCase<
     private addServicesToList() {
         for (const prop in this) {
             if (this[prop] instanceof Service) {
+                if (!this.serviceList) this.serviceList = []
                 this.serviceList.push(this[prop] as Service)
             }
         }
