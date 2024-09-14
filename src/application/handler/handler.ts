@@ -19,8 +19,9 @@ export class Handler extends BaseClass<HandlerDependencies> {
     @Dependency
     private declare middlewares: Middleware[]
 
-    addMiddlewares(middlewares: Middleware[] = []) {
+    addMiddlewares(middlewares: Middleware[] = []): this {
         this.middlewares = [...this.middlewares, ...middlewares]
+        return this
     }
 
     async process(rawRequest: any): Promise<any> {
