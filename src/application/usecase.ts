@@ -1,6 +1,5 @@
-import { CommonListResponse, CommonListResponseMeta, CommonResponse, CommonRequest } from '../types'
+import { CommonRequest } from '../types'
 import { Session } from '../domain/session'
-import { InternalError, ResponseError, ResponseSuccess } from './responses-usecase'
 import { BaseClass } from '../shared/base-class'
 
 export class UseCase<
@@ -25,24 +24,7 @@ export class UseCase<
         this.session = session
     }
 
-    async process(): Promise<ResponseSuccess> {
-        try {
-            const response = await this.processData()
-            return new ResponseSuccess(this.statusCode, response) as ResponseSuccess
-        } catch (error) {
-            throw error instanceof ResponseError ? error : new InternalError()
-        }
-    }
-
-    protected processData(): Promise<CommonResponse<{}> | CommonListResponseMeta> {
+    process(): Promise<object> {
         throw new Error('Must be override')
-    }
-
-    protected formatResponse<T>(data: T): CommonResponse<T> {
-        return { data }
-    }
-
-    protected formatListResponse<T>(data: T, meta: CommonListResponseMeta): CommonListResponse<T> {
-        return { data, meta }
     }
 }

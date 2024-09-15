@@ -2,7 +2,6 @@ import { Service, Session } from '../../domain'
 import { CommonRequest, HandlerDependencies, ObjectsWithServices } from '../../types'
 import { ErrorInterceptor } from './interceptor'
 import { Middleware } from './middleware'
-import { InternalError, ResponseError } from '../responses-usecase'
 import { UseCase } from '../usecase'
 import { RequestAdapter } from './request-adapter'
 import { BaseClass, Dependency } from '../../shared'
@@ -39,9 +38,10 @@ export class Handler extends BaseClass<HandlerDependencies> {
 
             const useCaseResponse = await this.useCase.process()
 
-            return this.requestAdapter.parseSuccessResponse(useCaseResponse)
+            return this.requestAdapter.parseResponse(useCaseResponse)
         } catch (error) {
-            return await this.handleError(error as Error)
+            const response = await this.errorInterceptor.catch(error as Error)
+            return this.requestAdapter.parseResponse(response)
         }
     }
 
@@ -69,13 +69,5 @@ export class Handler extends BaseClass<HandlerDependencies> {
             if (this.useCase.public && !middleware.public) continue
             await middleware.process({ rawRequest, request, useCase: this.useCase })
         }
-    }
-
-    async handleError(error: Error): Promise<object | string> {
-        await this.errorInterceptor.catch(error)
-
-        const errorToParse = error instanceof ResponseError ? error : new InternalError()
-
-        return this.requestAdapter.parseErrorResponse(errorToParse)
     }
 }
