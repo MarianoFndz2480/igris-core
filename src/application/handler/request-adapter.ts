@@ -1,4 +1,4 @@
-import { CommonRequest } from '../../types'
+import { CommonRequest, ErrorData } from '../../types'
 
 export class RequestAdapter {
     parseRequest(_: any): CommonRequest {
@@ -12,7 +12,7 @@ export class RequestAdapter {
         return useCaseInput
     }
 
-    parseResponse(response: object): object | string {
-        return response as object | string
+    parseResponse(_: ErrorData): object | string {
+        return {}
     }
 }

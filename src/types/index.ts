@@ -20,3 +20,4 @@ export type HandlerDependencies = {
     middlewares: Middleware[]
 }
 export type ObjectsWithServices = UseCase | Middleware
+export type ErrorData = { statusCode: number; response: object }

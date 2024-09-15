@@ -38,10 +38,10 @@ export class Handler extends BaseClass<HandlerDependencies> {
 
             const useCaseResponse = await this.useCase.process()
 
-            return this.requestAdapter.parseResponse(useCaseResponse)
+            return this.requestAdapter.parseResponse({ statusCode: this.useCase.statusCode, response: useCaseResponse })
         } catch (error) {
-            const response = await this.errorInterceptor.catch(error as Error)
-            return this.requestAdapter.parseResponse(response)
+            const errorData = await this.errorInterceptor.catch(error as Error)
+            return this.requestAdapter.parseResponse(errorData)
         }
     }
 
