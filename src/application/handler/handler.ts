@@ -67,17 +67,15 @@ export class Handler extends BaseClass<HandlerDependencies> {
 
         for (const middleware of middlewares) {
             if (this.useCase.public && !middleware.public) continue
-            await middleware.process(rawRequest, request, this.useCase)
+            await middleware.process({ rawRequest, request, useCase: this.useCase })
         }
     }
 
-    async handleError(error: Error) {
+    async handleError(error: Error): Promise<ResponseError> {
         await this.errorInterceptor.catch(error)
 
-        if (error instanceof ResponseError) {
-            return error
-        }
+        const errorToParse = error instanceof ResponseError ? error : new InternalError()
 
-        return new InternalError()
+        return this.requestAdapter.parseResponse(errorToParse)
     }
 }
