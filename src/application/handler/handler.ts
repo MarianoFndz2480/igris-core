@@ -25,7 +25,7 @@ export class Handler extends BaseClass<HandlerDependencies> {
         return this
     }
 
-    async process(rawRequest: any): Promise<any> {
+    async process(rawRequest: any): Promise<object | string> {
         try {
             const request = this.requestAdapter.parseRequest(rawRequest)
 
@@ -39,7 +39,7 @@ export class Handler extends BaseClass<HandlerDependencies> {
 
             const useCaseResponse = await this.useCase.process()
 
-            return this.requestAdapter.parseResponse(useCaseResponse)
+            return this.requestAdapter.parseSuccessResponse(useCaseResponse)
         } catch (error) {
             return await this.handleError(error as Error)
         }
@@ -71,11 +71,11 @@ export class Handler extends BaseClass<HandlerDependencies> {
         }
     }
 
-    async handleError(error: Error): Promise<ResponseError> {
+    async handleError(error: Error): Promise<object | string> {
         await this.errorInterceptor.catch(error)
 
         const errorToParse = error instanceof ResponseError ? error : new InternalError()
 
-        return this.requestAdapter.parseResponse(errorToParse)
+        return this.requestAdapter.parseErrorResponse(errorToParse)
     }
 }

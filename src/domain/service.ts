@@ -1,6 +1,5 @@
 import { Session } from './session'
 import { Entity, MutableEntity } from './entity'
-import { NotFoundError } from '../application'
 import { BaseClass } from '../shared/base-class'
 
 export abstract class Service<Dependencies extends Record<string, any> = {}> extends BaseClass<Dependencies> {
@@ -23,7 +22,7 @@ export abstract class EntityService<T extends Entity> extends Service {
 
         const updatedEntity = await this.updateEntity(entity)
 
-        if (!updatedEntity) throw new NotFoundError(this.constructor.name.split('Service')[0])
+        if (!updatedEntity) return entity
 
         return updatedEntity
     }

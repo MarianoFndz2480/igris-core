@@ -25,13 +25,12 @@ export class UseCase<
         this.session = session
     }
 
-    async process(): Promise<ResponseSuccess | ResponseError> {
+    async process(): Promise<ResponseSuccess> {
         try {
             const response = await this.processData()
             return new ResponseSuccess(this.statusCode, response) as ResponseSuccess
-        } catch (err) {
-            if (err instanceof ResponseError) return err
-            return new InternalError()
+        } catch (error) {
+            throw error instanceof ResponseError ? error : new InternalError()
         }
     }
 

@@ -18,16 +18,6 @@ export class ResponseError extends Error {
     }
 }
 
-export class NotFoundError extends ResponseError {
-    declare code: number
-    declare entity: string
-    constructor(entity: string) {
-        super()
-        this.message = `${entity} not found`
-        this.code = 404
-    }
-}
-
 export class InternalError extends ResponseError {
     constructor() {
         super()
@@ -36,19 +26,13 @@ export class InternalError extends ResponseError {
     }
 }
 
-export class InvalidPayloadError extends ResponseError {
-    constructor(error: string) {
+export class NotFoundError extends ResponseError {
+    declare code: number
+    declare entity: string
+    constructor(entity: string) {
         super()
-        this.message = `Invalid payload: ${error}`
-        this.code = 400
-    }
-}
-
-export class InvalidQueryParamsError extends ResponseError {
-    constructor(error: string) {
-        super()
-        this.message = `Invalid query params: ${error}`
-        this.code = 400
+        this.message = `${entity} not found`
+        this.code = 404
     }
 }
 
@@ -63,7 +47,7 @@ export class UnauthorizedError extends ResponseError {
 export class ForbiddenError extends ResponseError {
     constructor() {
         super()
-        this.message = 'ForbiddenError'
+        this.message = 'Forbidden'
         this.code = 403
     }
 }

@@ -13,7 +13,11 @@ export class RequestAdapter {
         return useCaseInput
     }
 
-    parseResponse(response: ResponseSuccess | ResponseError): any {
-        return response as any
+    parseSuccessResponse(response: ResponseSuccess): object | string {
+        return response as object | string
+    }
+
+    parseErrorResponse(response: ResponseError): object | string {
+        return response as object | string
     }
 }
