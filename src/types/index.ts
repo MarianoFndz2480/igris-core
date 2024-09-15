@@ -19,3 +19,4 @@ export type HandlerDependencies = {
     requestAdapter: RequestAdapter
     middlewares: Middleware[]
 }
+export type ObjectsWithServices = UseCase | Middleware

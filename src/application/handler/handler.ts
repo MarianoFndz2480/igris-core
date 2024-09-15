@@ -1,5 +1,5 @@
-import { Session } from '../../domain'
-import { CommonRequest, HandlerDependencies } from '../../types'
+import { Service, Session } from '../../domain'
+import { CommonRequest, HandlerDependencies, ObjectsWithServices } from '../../types'
 import { ErrorInterceptor } from './interceptor'
 import { Middleware } from './middleware'
 import { InternalError, ResponseError } from '../responses-usecase'
@@ -18,6 +18,7 @@ export class Handler extends BaseClass<HandlerDependencies> {
     private declare readonly requestAdapter: RequestAdapter
     @Dependency
     private declare middlewares: Middleware[]
+    declare serviceList: Service[]
 
     addMiddlewares(middlewares: Middleware[] = []): this {
         this.middlewares = [...this.middlewares, ...middlewares]
@@ -32,6 +33,8 @@ export class Handler extends BaseClass<HandlerDependencies> {
 
             this.useCase.setRequest(request)
 
+            this.injectSessionToServices()
+
             await this.processMiddlewares(rawRequest, request)
 
             const useCaseResponse = await this.useCase.process()
@@ -42,7 +45,24 @@ export class Handler extends BaseClass<HandlerDependencies> {
         }
     }
 
-    private async processMiddlewares(rawRequest: any, request: CommonRequest) {
+    private injectSessionToServices() {
+        if (!this.session) return
+        this.addServicesToList([this.useCase, ...this.middlewares])
+        this.serviceList.forEach((service) => service.injectSession(this.session as Session))
+    }
+
+    private addServicesToList(objects: ObjectsWithServices[]) {
+        objects.forEach((obj: { [key: string]: any }) => {
+            for (const prop in obj) {
+                if (obj[prop] instanceof Service) {
+                    if (!this.serviceList) this.serviceList = []
+                    this.serviceList.push(obj[prop] as Service)
+                }
+            }
+        })
+    }
+
+    private async processMiddlewares(rawRequest: object, request: CommonRequest) {
         const middlewares = [...this.middlewares]
 
         for (const middleware of middlewares) {
