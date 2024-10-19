@@ -3,7 +3,7 @@ import { Entity } from './entity'
 
 export interface Repository<T extends Entity = Entity> {
     getBy(props: Partial<{ [K in NonFunctionAndRequiredKeys<T>]: T[K] }>): Promise<T | null>
-    create(props: { [K in NonFunctionAndRequiredKeys<T>]: T[K] }): Promise<T>
+    create(props: Partial<{ [K in NonFunctionAndRequiredKeys<T>]: T[K] }>): Promise<T>
     update?(
         where: Partial<{ [K in NonFunctionAndRequiredKeys<T>]: T[K] }>,
         dataToUpdate: Partial<{ [K in NonFunctionAndRequiredKeys<T>]: T[K] }>,

@@ -2,14 +2,14 @@ import { ListEntityProps, Repository } from './repository'
 import { Session } from './session'
 import { Entity } from './entity'
 import { Service } from './service'
-import { FirstParameter } from '../types'
+import { FirstParameter, NonFunctionAndRequiredKeys } from '../types'
 import { MutableEntity } from './mutable-entity'
 
 export abstract class EntityService<
     AppSession extends Session,
     T extends Entity,
     R extends Repository<T>,
-    CreationProps extends Record<keyof T, any>,
+    CreationProps extends Partial<{ [K in NonFunctionAndRequiredKeys<T>]: T[K] }>,
 > extends Service<T> {
     protected declare readonly repository: R
     protected declare readonly public: boolean
