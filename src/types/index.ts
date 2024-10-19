@@ -2,10 +2,11 @@ import { Entity, Session } from '../domain'
 import { ErrorInterceptor, Middleware, UseCase } from '../application'
 import { RequestAdapter } from '../application/handler/request-adapter'
 
-export interface CommonRequest<T = {}, Q = {}, W = {}> {
-    payload: T
-    queryParams: Q
-    headers: W
+export interface CommonRequest<Payload = {}, QueryParams = {}, Headers = {}, PathParams = {}> {
+    payload: Payload
+    queryParams: QueryParams
+    headers: Headers
+    pathParams: PathParams
     token: string
 }
 export type CommonResponse<T> = { data: T }

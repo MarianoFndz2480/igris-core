@@ -6,6 +6,7 @@ export class RequestAdapter {
             payload: {},
             token: '',
             queryParams: {},
+            pathParams: {},
             headers: {},
         }
 
