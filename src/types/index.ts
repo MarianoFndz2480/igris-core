@@ -2,7 +2,7 @@ import { Entity, Session } from '../domain'
 import { ErrorInterceptor, Middleware, UseCase } from '../application'
 import { RequestAdapter } from '../application/handler/request-adapter'
 
-export interface CommonRequest<Payload = {}, QueryParams = {}, Headers = {}, PathParams = {}> {
+export interface UseCaseRequest<Payload = {}, QueryParams = {}, Headers = {}, PathParams = {}> {
     payload: Payload
     queryParams: QueryParams
     headers: Headers
@@ -14,7 +14,7 @@ export type CommonListResponse<T> = CommonResponse<T> & { meta: CommonListRespon
 export type CommonListResponseMeta = { total: number; totalPages: number; page: number; currentCount: number }
 export type AdditionalEntitiesTypes = Record<string, Entity<{}, {}> | Entity<{}, {}>[]>
 export type HandlerDependencies = {
-    useCase: UseCase<Session, CommonRequest>
+    useCase: UseCase<Session, UseCaseRequest>
     session: Session
     errorInterceptor: ErrorInterceptor
     requestAdapter: RequestAdapter

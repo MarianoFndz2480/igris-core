@@ -1,8 +1,8 @@
-import { CommonRequest, ErrorData } from '../../types'
+import { UseCaseRequest, ErrorData } from '../../types'
 
 export class RequestAdapter {
-    parseRequest(_: any): CommonRequest {
-        const useCaseInput: CommonRequest = {
+    parseRequest(_: any): UseCaseRequest {
+        const useCaseInput: UseCaseRequest = {
             payload: {},
             token: '',
             queryParams: {},

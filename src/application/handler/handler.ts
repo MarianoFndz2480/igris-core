@@ -1,5 +1,5 @@
 import { Service, Session } from '../../domain'
-import { CommonRequest, HandlerDependencies, ObjectsWithServices } from '../../types'
+import { UseCaseRequest, HandlerDependencies, ObjectsWithServices } from '../../types'
 import { ErrorInterceptor } from './interceptor'
 import { Middleware } from './middleware'
 import { UseCase } from '../usecase'
@@ -8,7 +8,7 @@ import { BaseClass, Dependency } from '../../shared'
 
 export class Handler extends BaseClass<HandlerDependencies> {
     @Dependency
-    private declare readonly useCase: UseCase<Session, CommonRequest>
+    private declare readonly useCase: UseCase<Session, UseCaseRequest>
     @Dependency
     private declare readonly session: Session
     @Dependency
@@ -62,7 +62,7 @@ export class Handler extends BaseClass<HandlerDependencies> {
         })
     }
 
-    private async processMiddlewares(rawRequest: object, request: CommonRequest) {
+    private async processMiddlewares(rawRequest: object, request: UseCaseRequest) {
         const middlewares = [...this.middlewares]
 
         for (const middleware of middlewares) {

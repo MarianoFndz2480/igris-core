@@ -1,10 +1,10 @@
-import { CommonRequest } from '../types'
+import { UseCaseRequest } from '../types'
 import { Session } from '../domain/session'
 import { BaseClass } from '../shared/base-class'
 
 export class UseCase<
     AppSession extends Session = Session,
-    AppRequest extends CommonRequest = CommonRequest,
+    AppRequest extends UseCaseRequest = UseCaseRequest,
     Dependencies extends Record<string, any> = {},
 > extends BaseClass<Dependencies> {
     declare statusCode: number
