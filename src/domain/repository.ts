@@ -1,19 +1,16 @@
-import { NonFunctionAndRequiredKeys, SortEnum } from '../types'
+import { EntityProperties, SortEnum } from '../types'
 import { Entity } from './entity'
 
 export interface Repository<T extends Entity = Entity> {
-    getBy(props: Partial<{ [K in NonFunctionAndRequiredKeys<T>]: T[K] }>): Promise<T | null>
-    create(props: Partial<{ [K in NonFunctionAndRequiredKeys<T>]: T[K] }>): Promise<T>
-    update?(
-        where: Partial<{ [K in NonFunctionAndRequiredKeys<T>]: T[K] }>,
-        dataToUpdate: Partial<{ [K in NonFunctionAndRequiredKeys<T>]: T[K] }>,
-    ): Promise<T | null>
-    getMany(props: ListEntityProps<T>): Promise<T[]>
+    getBy?(props: EntityProperties<T>): Promise<T | null>
+    create?(props: EntityProperties<T>): Promise<T>
+    update?(where: EntityProperties<T>, dataToUpdate: EntityProperties<T>): Promise<T | null>
+    getMany?(props: ListEntityProps<T>): Promise<T[]>
     getManyAndCountAll?(props: ListEntityProps<T>): Promise<{ rows: T[]; count: number }>
 }
 
 export type ListEntityProps<T> = {
-    where?: Partial<{ [K in NonFunctionAndRequiredKeys<T>]: T[K] }>
+    where?: EntityProperties<T>
     filters?: CommonFilters
     sort?: CommonSort
     includeEntities?: boolean

@@ -1,10 +1,7 @@
-import { Session } from './session'
-import { BaseClass } from '../shared/base-class'
+export abstract class Service {
+    protected declare session: {}
 
-export abstract class Service<Dependencies extends Record<string, any> = {}> extends BaseClass<Dependencies> {
-    protected declare session: Session
-
-    injectSession(session: Session) {
+    injectSession(session: {}) {
         this.session = session
     }
 

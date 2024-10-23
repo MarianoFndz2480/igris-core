@@ -3,29 +3,28 @@ import { ErrorInterceptor } from './interceptor'
 import { UseCase } from '../usecase'
 import { Middleware } from './middleware'
 import { RequestAdapter } from './request-adapter'
-import { Session } from '../../domain'
 
 export class HandlerFactory {
     createInstance(useCase: UseCase): Handler {
-        return new Handler({
+        return new Handler(
             useCase,
-            errorInterceptor: this.getErrorInterceptor(),
-            session: this.getSession(),
-            requestAdapter: this.getRequestAdapter(),
-            middlewares: this.getMiddlewares(),
-        })
+            this.getSession(),
+            this.getErrorInterceptor(),
+            this.getRequestAdapter(),
+            this.getMiddlewares(),
+        )
     }
 
-    getSession(): Session {
-        return new Session()
+    getSession(): {} {
+        return {}
     }
 
     getRequestAdapter(): RequestAdapter {
-        return new RequestAdapter()
+        throw new Error('RequestAdapter must be override')
     }
 
-    getErrorInterceptor(): ErrorInterceptor {
-        return new ErrorInterceptor()
+    getErrorInterceptor(): ErrorInterceptor | null {
+        return null
     }
 
     getMiddlewares(): Middleware[] {

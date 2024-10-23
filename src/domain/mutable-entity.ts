@@ -4,8 +4,8 @@ import { Entity } from './entity'
 import { EntityClassConstructor } from './entity-decorators'
 
 export class MutableEntity<
-    Data extends object,
-    DataToUpdate extends object,
+    Data extends object = {},
+    DataToUpdate extends object = {},
     Entities extends AdditionalEntitiesTypes = {},
 > extends Entity<Data, Entities> {
     getDataToUpdate() {

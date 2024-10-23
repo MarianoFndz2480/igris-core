@@ -1,19 +1,8 @@
-import { UseCaseRequest, ErrorData } from '../../types'
+import { UseCaseRequest } from '../../types'
+import { ErrorResponse } from '../errors'
+import { SuccessResponse } from '../response'
 
-export class RequestAdapter {
-    parseRequest(_: any): UseCaseRequest {
-        const useCaseInput: UseCaseRequest = {
-            payload: {},
-            token: '',
-            queryParams: {},
-            pathParams: {},
-            headers: {},
-        }
-
-        return useCaseInput
-    }
-
-    parseResponse(_: ErrorData): object | string {
-        return {}
-    }
+export interface RequestAdapter {
+    parseRequest(_: any): UseCaseRequest
+    parseResponse(_: SuccessResponse | ErrorResponse): object | string
 }

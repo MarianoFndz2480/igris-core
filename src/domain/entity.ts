@@ -1,13 +1,8 @@
-import { BaseClass } from '../shared/base-class'
 import { AdditionalEntitiesTypes } from '../types'
 import { EntityClassConstructor } from './entity-decorators'
 
-export class Entity<Data extends object = {}, Entities extends AdditionalEntitiesTypes = {}> extends BaseClass<{
-    data: Data
-    entities?: Entities
-}> {
+export class Entity<Data extends object = {}, Entities extends AdditionalEntitiesTypes = {}> {
     constructor(dependencies: { data: Data; entities?: Entities }) {
-        super(dependencies)
         this.setData(dependencies.data)
         this.setOldData()
         if (dependencies.entities) this.setEntities(dependencies.entities)
