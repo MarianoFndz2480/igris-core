@@ -66,4 +66,16 @@ export abstract class EntityService<
             query.limit = pagination.pageSize
         }
     }
+
+    async update(where: EntityProperties<T>, props: EntityProperties<T>): Promise<boolean> {
+        if (!!Object.keys(props).length) return false
+
+        if (!this.repository.update) {
+            throw new Error('Repository.update must be set')
+        }
+
+        const updatedEntity = await this.repository.update(where, props)
+
+        return !!updatedEntity
+    }
 }

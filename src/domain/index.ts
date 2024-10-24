@@ -1,7 +1,5 @@
 export * from './service'
 export * from './entity'
-export * from './mutable-entity'
 export * from './entity-service'
-export * from './mutable-entity-service'
 export * from './entity-decorators'
 export * from './entity-repository'

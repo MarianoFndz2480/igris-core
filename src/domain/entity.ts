@@ -1,7 +1,12 @@
 import { AdditionalEntitiesTypes } from '../types'
+import { getDifferences } from '../utils'
 import { EntityClassConstructor } from './entity-decorators'
 
-export class Entity<Data extends object = {}, Entities extends AdditionalEntitiesTypes = {}> {
+export class Entity<
+    Data extends object = {},
+    Entities extends AdditionalEntitiesTypes = {},
+    DataToUpdate extends object = {},
+> {
     constructor(dependencies: { data: Data; entities?: Entities }) {
         this.setData(dependencies.data)
         this.setOldData()
@@ -42,5 +47,14 @@ export class Entity<Data extends object = {}, Entities extends AdditionalEntitie
 
     getPublicData(): any {
         return {}
+    }
+
+    getDataToUpdate() {
+        const constructor = this.constructor as EntityClassConstructor
+        return getDifferences(constructor._oldData, { ...this })
+    }
+
+    update(props: DataToUpdate) {
+        Object.keys(props).forEach((prop) => ((this as any)[prop] = (props as any)[prop]))
     }
 }
