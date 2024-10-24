@@ -1,7 +1,7 @@
 import { EntityProperties, SortEnum } from '../types'
 import { Entity } from './entity'
 
-export interface Repository<T extends Entity = Entity> {
+export interface EntityRepository<T extends Entity = Entity> {
     getBy?(props: EntityProperties<T>): Promise<T | null>
     create?(props: EntityProperties<T>): Promise<T>
     update?(where: EntityProperties<T>, dataToUpdate: EntityProperties<T>): Promise<T | null>

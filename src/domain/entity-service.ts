@@ -1,11 +1,11 @@
-import { ListEntityProps, Repository } from './repository'
+import { ListEntityProps, EntityRepository } from './entity-repository'
 import { Entity } from './entity'
 import { Service } from './service'
 import { EntityProperties } from '../types'
 
 export abstract class EntityService<
     T extends Entity = Entity,
-    R extends Repository<T> = Repository<T>,
+    R extends EntityRepository<T> = EntityRepository<T>,
 > extends Service {
     constructor(protected readonly repository: R) {
         super()

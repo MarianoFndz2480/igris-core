@@ -1,10 +1,10 @@
 import { EntityService } from './entity-service'
 import { MutableEntity } from './mutable-entity'
-import { Repository } from './repository'
+import { EntityRepository } from './entity-repository'
 
 export abstract class MutableEntityService<
     T extends MutableEntity = MutableEntity,
-    R extends Repository<T> = Repository<T>,
+    R extends EntityRepository<T> = EntityRepository<T>,
 > extends EntityService<T, R> {
     async update(entity: T): Promise<T> {
         if (!entity.isValidToUpdate()) return entity
@@ -16,7 +16,7 @@ export abstract class MutableEntityService<
         return updatedEntity
     }
 
-    async updateEntity(entity: T): Promise<T | null> {
+    protected async updateEntity(entity: T): Promise<T | null> {
         if (!this.repository.update) {
             throw new Error('Repository.update must be set')
         }
