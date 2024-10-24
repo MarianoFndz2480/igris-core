@@ -66,7 +66,7 @@ export class Handler {
                 )
                 continue
             }
-            await middleware.process({ rawRequest, request, session: this.session })
+            await middleware.process({ rawRequest, request }, this.session)
         }
     }
 

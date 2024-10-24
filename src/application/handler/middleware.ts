@@ -1,10 +1,9 @@
 import { UseCaseRequest } from '../../types'
 
-export interface MiddlewareProps {
+export interface MiddlewareRequests {
     rawRequest: any
     request: UseCaseRequest
-    session: {}
 }
 export interface Middleware {
-    process(props: MiddlewareProps): Promise<void>
+    process(requests: MiddlewareRequests, session: {}): Promise<void>
 }
