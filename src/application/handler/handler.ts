@@ -60,7 +60,12 @@ export class Handler {
         const middlewares = [...this.middlewares]
 
         for (const middleware of middlewares) {
-            if ('public' in this.useCase && !('public' in middleware)) continue
+            if ('public' in this.useCase && !('public' in middleware)) {
+                console.log(
+                    `Middleware ${middleware.constructor.name} has not been processed because useCase ${this.useCase.constructor.name} is public`,
+                )
+                continue
+            }
             await middleware.process(rawRequest, request, this.useCase)
         }
     }
