@@ -18,11 +18,11 @@ export abstract class EntityService<
         return this.repository.create(props)
     }
 
-    getBy(props: EntityProperties<T>) {
+    getBy(props: EntityProperties<T>, includeEntities = false) {
         if (!this.repository.getBy) {
             throw new Error('Repository.getMany must be set')
         }
-        return this.repository.getBy(props)
+        return this.repository.getBy(props, includeEntities)
     }
 
     async getMany(data: { props: ListEntityProps<T>; pagination?: { page: number; pageSize: number } }): Promise<T[]> {
