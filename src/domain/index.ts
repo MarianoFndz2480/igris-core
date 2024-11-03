@@ -1,5 +1,4 @@
 export * from './service'
 export * from './entity'
 export * from './entity-service'
-export * from './entity-decorators'
 export * from './entity-repository'

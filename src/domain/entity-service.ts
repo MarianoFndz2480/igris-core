@@ -1,7 +1,7 @@
 import { ListEntityProps, EntityRepository } from './entity-repository'
-import { Entity } from './entity'
 import { Service } from './service'
 import { EntityProperties } from '../types'
+import { Entity } from './entity'
 
 export abstract class EntityService<
     T extends Entity = Entity,

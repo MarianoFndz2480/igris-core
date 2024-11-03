@@ -1,4 +1,4 @@
-import { Entity } from '../domain'
+
 import { Middleware, UseCase } from '../application'
 
 export interface UseCaseRequest<Payload = {}, QueryParams = {}, Headers = {}, PathParams = {}> {
@@ -14,8 +14,6 @@ export type CommonResponse<T> = { data: T }
 export type CommonListResponse<T> = CommonResponse<T> & { meta: CommonListResponseMeta }
 
 export type CommonListResponseMeta = { total: number; totalPages: number; page: number; currentCount: number }
-
-export type AdditionalEntitiesTypes = Record<string, Entity<{}, {}> | Entity<{}, {}>[]>
 
 export type ObjectsWithServices = UseCase | Middleware
 
