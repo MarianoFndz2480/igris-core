@@ -1,4 +1,4 @@
-import { getDifferences } from '../utils'
+import { getDifferences, plainToClassInstance } from '../utils'
 
 export class Entity {
     protected declare originalData: Record<string, any>
@@ -10,5 +10,9 @@ export class Entity {
 
     getChanges(): Partial<this> {
         return getDifferences(this.originalData, this)
+    }
+
+    static createInstanceFromPlain<T>(this: new () => T, plainObject: T): T {
+        return plainToClassInstance(this, plainObject)
     }
 }

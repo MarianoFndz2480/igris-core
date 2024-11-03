@@ -1,4 +1,3 @@
-
 import { Middleware, UseCase } from '../application'
 
 export interface UseCaseRequest<Payload = {}, QueryParams = {}, Headers = {}, PathParams = {}> {
