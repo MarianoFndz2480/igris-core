@@ -1,6 +1,6 @@
 {
     "name": "igris-core",
-    "version": "0.27.1",
+    "version": "0.27.2",
     "description": "The core of the Igris framework",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
