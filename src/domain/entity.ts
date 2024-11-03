@@ -1,3 +1,4 @@
+import { PropertiesOnly } from '../types'
 import { getDifferences, plainToClassInstance } from '../utils'
 
 export class Entity {
@@ -12,7 +13,7 @@ export class Entity {
         return getDifferences(this.originalData, this)
     }
 
-    static createInstanceFromPlain<T>(this: new () => T, plainObject: T): T {
-        return plainToClassInstance(this, plainObject)
+    static createInstanceFromPlain<T>(this: new () => T, plainObject: PropertiesOnly<T>): T {
+        return plainToClassInstance(this, plainObject as unknown as Partial<T>)
     }
 }

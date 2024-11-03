@@ -32,6 +32,12 @@ export type NonFunctionAndRequiredKeys<T> = Extract<NonFunctionKeys<T>, Required
 
 export type EntityProperties<T> = Partial<{ [K in NonFunctionAndRequiredKeys<T>]: T[K] }>
 
+export type InstanceProperties<T> = {
+    [K in keyof T]: T[K] extends Function ? never : K
+}[keyof T]
+
+export type PropertiesOnly<T> = Pick<T, InstanceProperties<T>>
+
 export enum SortEnum {
     DESC = 'DESC',
     ASC = 'ASC',
